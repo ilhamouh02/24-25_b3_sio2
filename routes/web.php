@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,10 +25,21 @@ Route::get('/schnaps', function () {
 Route::get('/home', function () {
     return View::make('pages.home');
      });
+
+Route::get('/index', function () {
+    return View::make('roles.index');
+     });
    
 Route::get('/about', function () {
      return View::make('pages.about');
      });
+
+
+#Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+
+Route::resource('roles', RoleController::class);
+Route::resource('users', UserController::class);
+
      
 Route::get('/dashboard', function () {
     return view('dashboard');
