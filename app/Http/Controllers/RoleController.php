@@ -32,56 +32,48 @@ class RoleController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-    
-        Role::create($request->all()); // Enregistre les données dans la base
-        return redirect()->route('roles.index')->with('success', 'Rôle créé avec succès.');
-    }
+{
+    $request->validate([
+        'id' => 'required|unique:roles,id',
+        'label' => 'required|string|max:255',
+    ]);
+
+    Role::create($request->only(['id', 'label']));
+
+    return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+}
+
+
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        $role = Role::findOrFail($id); // Trouve un rôle par ID
-    return view('roles.show', compact('role')); // Vue pour afficher un rôle
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function show($id)
     {
         $role = Role::findOrFail($id);
-        return view('roles.edit', compact('role')); // Vue contenant le formulaire d'édition
+        return view('roles.show', compact('role'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    
+    public function edit($id)
+    {
+        $role = Role::findOrFail($id);
+        return view('roles.edit', compact('role'));
+    }
+    
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'label' => 'required|string|max:255',
         ]);
     
         $role = Role::findOrFail($id);
-        $role->update($request->all()); // Met à jour les données
+        $role->update($request->only('label'));
         return redirect()->route('roles.index')->with('success', 'Rôle mis à jour avec succès.');
     }
     
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         $role = Role::findOrFail($id);
-        $role->delete(); // Supprime le rôle
+        $role->delete();
         return redirect()->route('roles.index')->with('success', 'Rôle supprimé avec succès.');
     }
-}
+}    
